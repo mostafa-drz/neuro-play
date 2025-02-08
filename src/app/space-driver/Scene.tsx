@@ -5,7 +5,7 @@ import MovingMeteor, { CubeColor, SpawnedObjectType } from './MovingMeteor';
 interface SceneProps {
   onScore: (points: number) => void;
   speed: number;
-  onSpeedIncrease: () => void;
+  onSpeedIncrease: (speed?:number) => void;
   colorMapping: Record<CubeColor, string>;
 }
 
@@ -73,6 +73,7 @@ const Scene: React.FC<SceneProps> = ({ onScore, speed, onSpeedIncrease, colorMap
           setSpawnedObject(null);
         } else {
           onScore(-100);
+          onSpeedIncrease(-1);
           window.dispatchEvent(new Event('shake'));
         }
       } else {

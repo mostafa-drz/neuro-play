@@ -18,8 +18,8 @@ const SpaceScene: React.FC = () => {
     setScore((prev) => prev + points);
   }, []);
 
-  const increaseSpeed = useCallback(() => {
-    setSpeed((prev) => prev + 1);
+  const increaseSpeed = useCallback((increase=1) => {
+    setSpeed((prev) => prev + increase);
   }, []);
 
   // Generate random key assignments on mount.
