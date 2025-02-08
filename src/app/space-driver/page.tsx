@@ -1,6 +1,7 @@
-import Head from 'next/head';
-import DrivingScene from './DrivingScene';
+"use client";
 
+import Head from 'next/head';
+import SpaceScene from './SpaceScene';
 
 export default function DriveReactionPage() {
   return (
@@ -13,7 +14,7 @@ export default function DriveReactionPage() {
         />
       </Head>
       <div className="w-screen h-screen">
-        <DrivingScene />
+        <SpaceScene />
       </div>
     </>
   );
