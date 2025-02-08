@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import * as THREE from 'three';
-import MovingCube, { CubeColor, SpawnedObjectType } from './MovingCube';
+import MovingMeteor, { CubeColor, SpawnedObjectType } from './MovingMeteor';
 
 interface SceneProps {
   onScore: (points: number) => void;
@@ -9,7 +9,7 @@ interface SceneProps {
   colorMapping: Record<CubeColor, string>;
 }
 
-// Helper: pick a random spawn position on one of four edges (with z = -50)
+// Helper: returns a random spawn position along one of the four edges (with z = -50)
 function getRandomSpawn(): { position: THREE.Vector3 } {
   const horizontalBoundary = 15;
   const verticalBoundary = 10;
@@ -38,6 +38,7 @@ function getRandomSpawn(): { position: THREE.Vector3 } {
 const Scene: React.FC<SceneProps> = ({ onScore, speed, onSpeedIncrease, colorMapping }) => {
   const [spawnedObject, setSpawnedObject] = useState<SpawnedObjectType | null>(null);
 
+  // Spawn a new meteor object with a random color and spawn position.
   const spawnObject = useCallback(() => {
     const id = Date.now();
     const colors: CubeColor[] = ['red', 'green', 'yellow'];
@@ -48,6 +49,7 @@ const Scene: React.FC<SceneProps> = ({ onScore, speed, onSpeedIncrease, colorMap
     setSpawnedObject({ id, spawnTime: Date.now(), color, position, direction });
   }, []);
 
+  // Spawn a meteor after a delay if none exists.
   useEffect(() => {
     if (!spawnedObject) {
       const timer = setTimeout(() => spawnObject(), 500);
@@ -55,13 +57,13 @@ const Scene: React.FC<SceneProps> = ({ onScore, speed, onSpeedIncrease, colorMap
     }
   }, [spawnedObject, spawnObject]);
 
+  // Handle key presses based on the randomized color mapping.
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       const validKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp'];
       if (!validKeys.includes(e.key)) return;
 
       if (spawnedObject) {
-        // Get the expected key from the random color mapping.
         const expectedKey = colorMapping[spawnedObject.color];
         if (e.key === expectedKey) {
           const reactionTime = Date.now() - spawnedObject.spawnTime;
@@ -86,10 +88,11 @@ const Scene: React.FC<SceneProps> = ({ onScore, speed, onSpeedIncrease, colorMap
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  // If the meteor reaches the center (i.e. the player's area), it's considered missed.
   const handleObjectReached = useCallback(
     (id: number) => {
       if (spawnedObject && spawnedObject.id === id) {
-        onScore(-50);
+        onScore(-50); // Miss penalty.
         onSpeedIncrease();
         setSpawnedObject(null);
       }
@@ -100,7 +103,7 @@ const Scene: React.FC<SceneProps> = ({ onScore, speed, onSpeedIncrease, colorMap
   return (
     <>
       {spawnedObject && (
-        <MovingCube object={spawnedObject} speed={speed} onReached={handleObjectReached} />
+        <MovingMeteor object={spawnedObject} speed={speed} onReached={handleObjectReached} />
       )}
     </>
   );

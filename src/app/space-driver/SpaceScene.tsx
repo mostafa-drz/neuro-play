@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import Scene from './Scene';
+import MobileControls from './MobileControls';
+import Background from './Background';
 
 type CubeColor = 'red' | 'green' | 'yellow';
 
@@ -51,6 +53,7 @@ const SpaceScene: React.FC = () => {
   return (
     <div className={`relative w-full h-full ${shake ? 'shake' : ''}`}>
       <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+        <Background />
         <ambientLight intensity={0.5} />
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade />
         {started && colorMapping && (
@@ -65,6 +68,7 @@ const SpaceScene: React.FC = () => {
       {/* Overlays */}
       <div className="absolute top-4 left-4 text-white text-xl z-10">Score: {score}</div>
       <div className="absolute top-4 right-4 text-white text-xl z-10">Speed: {speed}</div>
+      <MobileControls />
 
       {/* Start Overlay */}
       {!started && colorMapping && (
@@ -95,10 +99,6 @@ const SpaceScene: React.FC = () => {
           </button>
         </div>
       )}
-
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-lg z-10">
-        Keep your eyes wide open and react fast!
-      </div>
 
       {/* Inline styles for shake animation */}
       <style jsx>{`
